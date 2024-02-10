@@ -1,0 +1,20 @@
+{
+    "files": ["README.md"],
+    "imageSize": 100,
+    "commit": false,
+    "contributors": [
+        {
+            "login": "LuisTellezSirocco",
+            "name": "Luis Téllez",
+            "avatar_url": "https://avatars.githubusercontent.com/u/110382845?s=96&v=4",
+            "profile": "https://github.com/LuisTellezSirocco",
+            "contributions": ["code"]
+        }
+    ],
+    "contributorsPerLine": 1,
+    "projectName": "LuisTellezSirocco",
+    "projectOwner": "SiroccoEnergy",
+    "repoType": "github",
+    "repoHost": "https://github.com",
+    "skipCi": true
+}
