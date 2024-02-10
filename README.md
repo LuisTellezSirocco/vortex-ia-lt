@@ -3,30 +3,34 @@
 <!-- [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-) -->
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-# Descripción de Componentes Clave
+# Instalation
 
-- docs/: Documentación del proyecto, posiblemente utilizando herramientas como Sphinx.
-- src/: Todo el código fuente del paquete Python.
-- tests/: Tests para el proyecto, estructurados con una herramienta de testing como pytest.
-- .github/: Configuraciones y plantillas para GitHub, incluyendo CI/CD con GitHub Actions.
-- .gitignore: Lista de archivos y carpetas que Git debe ignorar.
-- .dockerignore: Lista de archivos y carpetas que Docker debe ignorar al construir imágenes.
-- Dockerfile: Configuración para construir un contenedor Docker para el proyecto.
-- LICENSE: Licencia bajo la cual se distribuye el proyecto.
-- README.md: Información sobre el proyecto, cómo instalarlo, cómo contribuir, etc.
-- requirements.txt: Lista de dependencias necesarias para el proyecto en producción.
-- requirements-dev.txt: Lista de dependencias necesarias para desarrollo y testing.
-- setup.py: Script para instalar el paquete Python usando setuptools.
-- pyproject.toml: Configuración para herramientas de construcción de paquetes.
-- setup.cfg: Configuraciones para linters (como flake8), formateadores de código (como black), y otras herramientas de desarrollo.
+We will be using `conda` to manage the environment, so first we need to install it. You can download it from [here](https://docs.conda.io/en/latest/miniconda.html).
 
-# Instrucciones Adicionales
-- Asegúrate de personalizar el README.md con detalles específicos de tu proyecto.
-- Actualiza requirements.txt y requirements-dev.txt según las dependencias de tu proyecto.
-- Personaliza las plantillas de issue y pull request de GitHub para adaptarlas a las prácticas de tu equipo.
-- Configura los workflows de GitHub Actions según tus necesidades de integración continua y despliegue continuo.
-- Completa la documentación dentro de docs/ para que otros puedan entender y contribuir fácilmente a tu proyecto.
-- Al usar esta plantilla, podrás comenzar nuevos proyectos con una base sólida y consistente, lo que facilitará la colaboración y el mantenimiento a lo largo del tiempo.
+Once you have installed `conda`, you can create the environment by running the following command:
+
+```bash
+conda create -n vortexia python=3.10
+````
+Then, you can activate the environment by running:
+
+```bash
+conda activate vortexia
+```
+
+Now, you can install the packages by running:
+
+```bash
+pip install -e .
+```
+
+Create notebook kernel
+```bash
+python -m ipykernel install --user --name vortexia --display-name "vortex-ia-lt"
+```
+
+This will install the package in editable mode, so you can modify the code and test it without having to reinstall the package. And also it will install the required packages.
+
 
 ## Contributors ✨
 
@@ -38,6 +42,7 @@ Thanks goes to:
 <table>
   <tr>
     <td align="center"><a href="https://github.com/LuisTellezSirocco"><img src="https://avatars.githubusercontent.com/u/110382845?s=96&v=4" width="100px;" alt=""/><br /><sub><b>Luis Téllez</b></sub></a><br /><a href="https://github.com/LuisTellezSirocco" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/gcastro-98"><img src="https://avatars.githubusercontent.com/u/83754427?v=4" width="100px;" alt=""/><br /><sub><b>Gerard Castro</b></sub></a><br /><a href="https://github.com/gcastro-98" title="Code">💻</a></td>
   </tr>
 </table>
 

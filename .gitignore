@@ -129,3 +129,5 @@ Thumbs.db
 
 # Additions for the package
 
+/input/train.csv
+/input/test.csv
