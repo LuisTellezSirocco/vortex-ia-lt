@@ -1,44 +1,7 @@
-# PYTHON-PROJECT-TEMPLATE
+# Vortex-IA-LT attack
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 <!-- [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-) -->
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-El proyecto "python-project-template" es una plantilla de proyecto de Python que proporciona una estructura y configuración inicial para comenzar a desarrollar aplicaciones en Python de manera organizada y eficiente. Incluye componentes clave como documentación, código fuente, pruebas, configuraciones de GitHub, archivos de Docker, licencia, entre otros. Esta plantilla facilita la colaboración y el mantenimiento a lo largo del tiempo al proporcionar una base sólida y consistente para nuevos proyectos.
-
-```
-python-project-template/
-│
-├── .github/                 # Contiene GitHub workflows y templates para issues y pull requests
-│   ├── workflows/           # CI/CD usando GitHub Actions
-│   ├── ISSUE_TEMPLATE/      # Plantillas para la creación de issues
-│   └── PULL_REQUEST_TEMPLATE.md # Plantilla para la creación de pull requests
-│
-├── docs/                    # Documentación del proyecto
-│   ├── build/               # Archivos generados por Sphinx o otra herramienta de documentación
-│   └── source/              # Archivos fuente para la generación de la documentación
-│
-├── src/                     # Código fuente del proyecto
-│   └── package_name/        # Paquete Python (reemplazar con el nombre real del paquete)
-│       ├── __init__.py
-│       ├── module1.py
-│       └── module2.py
-│
-├── tests/                   # Test suite para el proyecto
-│   ├── __init__.py
-│   ├── test_module1.py
-│   └── test_module2.py
-│
-├── .gitignore               # Especifica archivos no rastreados por Git
-├── .dockerignore            # Especifica archivos no copiados durante la construcción de Docker
-├── Dockerfile               # Instrucciones para crear un Docker container para el proyecto
-├── LICENSE                  # Licencia del proyecto
-├── README.md                # Descripción del proyecto, instrucciones de instalación y uso
-├── requirements.txt         # Dependencias del proyecto para producción
-├── requirements-dev.txt     # Dependencias del proyecto para desarrollo y pruebas
-├── setup.py                 # Script de instalación del paquete
-├── pyproject.toml           # Configuración de herramientas de construcción de paquetes, como PEP 518
-└── setup.cfg                # Configuraciones para linters y otras herramientas
-```
 
 # Descripción de Componentes Clave
 
