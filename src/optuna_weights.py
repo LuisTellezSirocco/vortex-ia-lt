@@ -35,8 +35,6 @@ print("Pesos optimizados:", ow.get_weights())
 
 import numpy as np
 import optuna
-import pandas as pd
-from pandas import DataFrame
 from functools import partial
 from sklearn.metrics import mean_squared_error
 

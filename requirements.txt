@@ -1,3 +1,6 @@
 pycaret
 jupyter
 optuna
+catboost
+seaborn
+xarray

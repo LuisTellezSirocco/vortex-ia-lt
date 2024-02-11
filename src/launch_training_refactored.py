@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from typing import Literal
-from sklearn.model_selection import KFold
+
 import numpy as np
 import pandas as pd
 from automl_stuff_regression import *  # noqa: F403
@@ -9,11 +9,11 @@ from auxiliary import *  # noqa: F403
 from catboost import CatBoostRegressor, Pool
 from logger import setup_logger
 from pycaret.regression import *  # noqa: F403
-from pynational.utils.preprocessing import add_date_vars
 from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import TimeSeriesSplit, train_test_split
+from sklearn.model_selection import KFold, TimeSeriesSplit, train_test_split
 
-# Assume imports for setup_logger, get_train_x, get_train_y, get_test_x, add_date_vars, setup, create_model, save_model, load_model, compare_models, pull, get_best_models_by_metric, train_blender_based_on_best_metrics are correctly in place.
+from src.utils import add_date_vars
+
 
 def intro_log(log):
     log.info("*" * 50)
@@ -21,6 +21,7 @@ def intro_log(log):
         "Starting script where we train CatBoost Vortex Comptetition With All Data."
     )
     log.info("*" * 50)
+
 
 def prepare_environment():
     current_path = Path(os.getcwd())
@@ -80,7 +81,11 @@ def train_model_for_target(
     target: Literal["U_70.0", "V_70.0", "M"],
     validation_strategy: Literal["TimeSeriesSplit", "KFold"] = "TimeSeriesSplit",
 ):
-    assert target in ["U_70.0", "V_70.0", "M"], "Target must be either 'U_70.0', 'V_70.0' or 'M'"
+    assert target in [
+        "U_70.0",
+        "V_70.0",
+        "M",
+    ], "Target must be either 'U_70.0', 'V_70.0' or 'M'"
     assert validation_strategy in [
         "TimeSeriesSplit",
         "KFold",
@@ -92,28 +97,44 @@ def train_model_for_target(
     else:
         # Create an instance of KFold
         tscv = KFold(n_splits=n_splits, shuffle=False)
-        
-    log.info(f'Validation strategy: {validation_strategy} with {n_splits} splits.')
+
+    log.info(f"Validation strategy: {validation_strategy} with {n_splits} splits.")
 
     model = setup_model()
 
     X_val_target, y_val_target = model_training_process(
-        target, X_train, _train_y, log, tscv, model, output_path, n_splits, validation_strategy
+        target,
+        X_train,
+        _train_y,
+        log,
+        tscv,
+        model,
+        output_path,
+        n_splits,
+        validation_strategy,
     )
     return X_val_target, y_val_target
 
 
 def model_training_process(
-    TARGET, X_train, _train_y, log, tscv, model, output_path, n_splits, validation_strategy
+    TARGET,
+    X_train,
+    _train_y,
+    log,
+    tscv,
+    model,
+    output_path,
+    n_splits,
+    validation_strategy,
 ):
     log.info(f"Training model for {TARGET}...")
 
     log.info("Splitting into train and validation sets...")
-    
+
     if TARGET == "M":
         # Calculate M from U and V
         _train_y["M"] = np.sqrt(_train_y["U_70.0"] ** 2 + _train_y["V_70.0"] ** 2)
-    
+
     X_train_target, X_val_target, y_train_target, y_val_target = train_test_split(
         X_train, _train_y[[TARGET]], test_size=0.3, shuffle=False
     )
@@ -142,11 +163,11 @@ def model_training_process(
         log.info(
             f"Fold {fold}: Train shape: {X_train_fold.shape}, Val shape: {X_val_fold.shape}"
         )
-        
+
         if os.path.exists(cbm_path):
             log.info(f"Model for fold {fold} already exists. Skipping...")
             continue
-        
+
         model.fit(train_pool, eval_set=val_pool)
 
         log.info(f"Model trained for fold {fold}.")
@@ -251,6 +272,7 @@ def main():
 
     # Uncomment below line to enable PC shutdown after execution
     # shut_down_pc()
+
 
 if __name__ == "__main__":
     main()

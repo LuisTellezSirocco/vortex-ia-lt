@@ -1,5 +1,5 @@
 import pandas as pd
-from pycaret.regression import *
+from pycaret.regression import *  # noqa: F403
 
 
 def create_lag_and_lead(df, variables):
