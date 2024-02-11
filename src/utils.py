@@ -6,6 +6,49 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 
 
+def reduce_to32bits(df, silence: bool = True):
+    """
+    This function reduces the memory usage of a dataframe by converting the data types of the columns to 32 bits.
+    :param df: dataframe to be reduced
+    :return: dataframe with 32 bits data types
+    """
+    df_ = df.copy()
+
+    start_mem = df_.memory_usage().sum() / 1024**2
+    if not silence:
+        print(f"Memory usage of dataframe is {start_mem:.2f} MB")
+
+    for col in df_.columns:
+        if df_[col].dtype.name.startswith("float"):
+            df_[col] = df_[col].astype("float32")
+        elif df_[col].dtype.name.startswith("int"):
+            df_[col] = df_[col].astype("int32")
+
+    end_mem = df_.memory_usage().sum() / 1024**2
+    if not silence:
+        print(f"Memory usage after optimization is: {end_mem:.2f} MB")
+        print(f"Decreased by {(100 * (start_mem - end_mem) / start_mem):.1f}%")
+
+    return df_
+
+
+def get_columns_with_low_std(dataframe: pd.DataFrame):
+    """
+    Returns a list of column names from the given dataframe that have a standard deviation less than or equal to 1.
+
+    Parameters:
+    dataframe (pd.DataFrame): The input dataframe.
+
+    Returns:
+    list: A list of column names with low standard deviation.
+    """
+    low_std_columns = []
+    for column in dataframe.columns:
+        if dataframe[column].std() <= 1:
+            low_std_columns.append(column)
+    return low_std_columns
+
+
 def add_date_vars(df: pd.DataFrame) -> pd.DataFrame:
     df_ = df.copy()
     # fourier transforms

@@ -12,64 +12,98 @@ from pycaret.regression import *  # noqa: F403
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold, TimeSeriesSplit, train_test_split
 
-from src.utils import add_date_vars
+from src.utils import add_date_vars, reduce_to32bits
 
+# Get repository root path
+ROOT_PATH: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def intro_log(log):
     log.info("*" * 50)
     log.info(
-        "Starting script where we train CatBoost Vortex Comptetition With All Data."
+        "Starting script where we train for Vortex Competition With All Data."
     )
     log.info("*" * 50)
 
 
 def prepare_environment():
-    current_path = Path(os.getcwd())
+    current_path = Path(ROOT_PATH)
+    
+    input_path = current_path / "input"
+    # check if input path exists, if not, we will raise an error with information
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input path {input_path} does not exist.")
+    else:  # We need to check if the input path has the necessary files, train.csv and test.csv
+        if not (input_path / "train.csv").exists():
+            raise FileNotFoundError(f"File train.csv does not exist in {input_path}.")
+        if not (input_path / "test.csv").exists():
+            raise FileNotFoundError(f"File test.csv does not exist in {input_path}.")
+    
     output_path = current_path / "output"
     output_path.mkdir(parents=True, exist_ok=True)
     return output_path
 
 
 def configure_logging(output_path):
-    return setup_logger(file_name=f"{output_path}/catboost.log")
+    return setup_logger(file_name=f"{output_path}/all_workflow.log")
 
 
 def load_data(log):
-    _train_x = get_train_x()  # noqa: F405
-    _train_y = get_train_y()  # noqa: F405
-    _test_x = get_test_x()  # noqa: F405
-
-    log_process(log, _train_x, _train_y, _test_x)
-
-    return _train_x, _train_y, _test_x
-
-
-def log_process(log, _train_x, _train_y, _test_x):
+    _train_x = reduce_to32bits(get_train_x())  # noqa: F405
+    _train_y = reduce_to32bits(get_train_y())  # noqa: F405
+    _test_x = reduce_to32bits(get_test_x())  # noqa: F405
+    
     log.info("Train X shape: {}".format(_train_x.shape))
     log.info("Train Y shape: {}".format(_train_y.shape))
     log.info("Test X shape: {}".format(_test_x.shape))
+
+    return _train_x, _train_y, _test_x
 
 
 def augment_data(_train_x, _test_x, log):
     X_train, added_vars = add_date_vars(_train_x)
     X_test, added_vars = add_date_vars(_test_x)
-    log.info("Added date variables.")
+    log.info(f"Added date variables => {added_vars}.")
     return X_train, X_test
 
 
-def setup_model():
-    return CatBoostRegressor(
-        iterations=100000,
-        verbose=500,
-        task_type="GPU",
-        devices="0:1",
-        random_seed=44,
-        use_best_model=True,
-        early_stopping_rounds=200,
-        border_count=254,
-        grow_policy="SymmetricTree",
-        allow_writing_files=False,
+def setup_model(model_selected="catboost"):
+    
+    if model_selected == "catboost":  
+    
+        return CatBoostRegressor(
+            iterations=100000,
+            verbose=500,
+            task_type="GPU",
+            devices="0:1",
+            random_seed=44,
+            use_best_model=True,
+            early_stopping_rounds=200,
+            border_count=254,
+            grow_policy="SymmetricTree",
+            allow_writing_files=False,
+        )
+        
+
+def find_best_model(X_train, target, fold=5, round=2, sort="RMSE"):
+    
+    exp = setup(
+        data=X_train,
+        target=target,
+        session_id=42,
+        log_experiment=False,
+        preprocess=True,
+        n_jobs=3,
+        fold_strategy="timeseries",
+        fold_shuffle=False,
+        data_split_shuffle=False,
+        fold=5,
     )
+    
+    all_available_models = models()
+    
+    best_model = compare_models(turbo=False)
+    
+       
 
 
 def train_model_for_target(
@@ -80,6 +114,7 @@ def train_model_for_target(
     n_splits,
     target: Literal["U_70.0", "V_70.0", "M"],
     validation_strategy: Literal["TimeSeriesSplit", "KFold"] = "TimeSeriesSplit",
+    model_selection: Literal["choose_best", "catboost"] = "catboost"
 ):
     assert target in [
         "U_70.0",
@@ -99,6 +134,10 @@ def train_model_for_target(
         tscv = KFold(n_splits=n_splits, shuffle=False)
 
     log.info(f"Validation strategy: {validation_strategy} with {n_splits} splits.")
+    
+    if model_selection == "choose_best":
+        model = choose_best_model(X_train, _train_y, fold=n_splits, round=2, sort="RMSE")
+    
 
     model = setup_model()
 

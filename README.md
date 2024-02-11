@@ -3,7 +3,7 @@
 <!-- [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-) -->
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-# Instalation
+# Installation
 
 We will be using `conda` to manage the environment, so first we need to install it. You can download it from [here](https://docs.conda.io/en/latest/miniconda.html).
 

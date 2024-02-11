@@ -14,8 +14,6 @@ pd.options.mode.chained_assignment = None
 
 INPUT_PATH: str = "input"
 OUTPUT_PATH: str = "output"
-os.makedirs(INPUT_PATH, exist_ok=True)
-os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 # Get repository root path
 ROOT_PATH: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
