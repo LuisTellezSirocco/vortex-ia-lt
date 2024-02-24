@@ -1,4 +1,4 @@
-pycaret
+scikit-learn
 jupyter
 optuna
 catboost
